@@ -196,6 +196,7 @@ loginButton.addEventListener("click", () => {
         body: JSON.stringify(data)
       };
 
+
     fetchFunction(`${homeUrl}User/`, loginOptions).then( res => {
         // On login show product list
         if (res.token) {
@@ -220,7 +221,7 @@ loginButton.addEventListener("click", () => {
                             <img src="${item.imagePath}" alt="">
                             <div class="card-text">
                                 <h2>${item.productName}</h2>
-                                <p class="product-description">${item.description}</p>
+                                <p class="product-description">${(item.description).substr(0, 160)}...</p>
                                 <p class="product-size">Size: ${item.size}</p>
                                 <p class="product-price">${item.unitPrice} din</p><span class="discounted"></span>
                             </div>

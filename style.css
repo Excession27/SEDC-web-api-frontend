@@ -44,12 +44,13 @@ h1 {
 
 .card {
     width: 75vw;
+    height: 95%;
     margin: 10px;
     background-color: var(--deep-chestnut);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column nowrap;
 }
 
 .card-text {
@@ -74,7 +75,7 @@ h1 {
 
 .card img {
     width: 100%;
-    height: calc(33vw - 1px);
+    height: calc(43vw - 1px);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
@@ -89,9 +90,12 @@ h1 {
     border: none;
     text-align: center;
     font-size: 1.2rem;
-    width: 30%;
+    width: 20%;
+    height: 35px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    translate: 11px 1px;
+    
 }
 
 .order-controls button {
@@ -99,8 +103,8 @@ h1 {
     border: none;
     text-align: center;
     font-size: 1.05rem;
-    width: 35%;
-    padding: 5px;
+    height: 35px;
+    padding: 5px 5px 5px 15px;
     border-radius: 10px;
 }
 
@@ -210,19 +214,41 @@ h1 {
     .login-form input, .login-form button {
         width: 350px;
     }
+
+    .order-controls input {
+        height: 50px;
+        translate: 11px 1px;
+    }
+
+    .order-controls button {
+        height: 50px;
+    }
+
+
 }
 
 @media only screen and (min-width: 900px) {
     .card {
-        width: 27vw;
+        width: 250px;
+        height: 580px;
     }
     .card img {
-        height: calc(25vw - 1px);
+        height: 250px;
     }
 
     .layout {
         flex-flow: row wrap;
         justify-content: center;
+    }
+
+    .order-controls input {
+        height: 50px;
+        width: 75px;
+        translate: 11px 1px;
+    }
+
+    .order-controls button {
+        height: 50px;
     }
 
 } 
