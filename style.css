@@ -1,0 +1,232 @@
+:root {
+    /* CSS HSL */
+    --hunter-green: hsla(132, 29%, 31%, 1);
+    --may-green: hsla(98, 32%, 45%, 1);
+    --android-green: hsla(78, 51%, 56%, 1);
+    --eggshell: hsl(43, 57%, 88%);
+    --deep-chestnut: hsla(359, 47%, 51%, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: var(--eggshell);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+body {
+    background-color: hsl(132, 29%, 31%);
+    
+}
+
+h1 {
+    text-align: center;
+    margin: 20px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+
+.container {
+    width: 100vw;
+}
+
+
+
+.layout {
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+
+.card {
+    width: 75vw;
+    margin: 10px;
+    background-color: var(--deep-chestnut);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.card-text {
+    padding: 0 15px;
+
+}
+
+.card h2, .product-price {
+    text-align: center;
+}
+
+.product-price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    
+}
+
+.card p, .card h2 {
+    width: 100%;
+    padding: 5px;
+}
+
+.card img {
+    width: 100%;
+    height: calc(33vw - 1px);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.order-controls {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.order-controls input {
+    background-color: var(--may-green);
+    border: none;
+    text-align: center;
+    font-size: 1.2rem;
+    width: 30%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.order-controls button {
+    background-color: var(--may-green);
+    border: none;
+    text-align: center;
+    font-size: 1.05rem;
+    width: 35%;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.order-controls button:hover {
+    background-color: hsla(98, 39%, 50%, 1);
+}
+
+
+
+.login-form {
+    margin-top: 200px;
+}
+
+.login-form form {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+
+.login-form input, .login-form button, .order-buttons {
+    background-color: var(--deep-chestnut);
+    border: none;
+    padding: 5px 10px;
+    margin: 5px 10px;
+    height: 35px;
+    text-align: center;
+    border-radius: 10px;
+    width: 80vw;
+}
+
+.login-form button, .green-button {
+    background-color: var(--may-green);
+}
+
+.login-form button:hover, .login-form input:hover {
+    border: 2px solid var(--eggshell);
+}
+
+.shopping-cart {
+    background-color: var(--hunter-green);
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: sticky;
+    top: -2px;
+}
+
+.shopping-cart-icon {
+    min-width: 50px;
+    width: 50px;
+        /*height: 50px; */
+    min-height: 50px;
+    margin-right: 20px;
+}
+
+.shopping-cart-icon img {
+    filter: invert(92%) sepia(15%) saturate(339%) hue-rotate(351deg) brightness(102%) contrast(90%);
+}
+
+.order-items {
+    flex-grow: 2;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    margin: 10px 25px;
+    border: 2px solid var(--android-green);
+    border-radius: 10px;
+
+}
+
+.order-list {
+    display: flex;
+    flex-flow: column wrap;
+    margin: 10px 5px;
+    justify-content: center;
+}
+
+.final-cart {
+    margin: 10px 5px;
+}
+
+.order-list li {
+    list-style: none;
+    margin: 10px 10px;
+}
+
+.android-green-text {
+    color: var(--android-green);
+}
+
+.total-sum {
+    font-weight: bold;
+    font-size: 1.12rem;
+}
+
+@media only screen and (min-width: 600px) {
+    .card {
+        width: 40vw;
+    }
+
+    .layout {
+        flex-flow: row wrap;
+        justify-content: center;
+    }
+
+    .login-form input, .login-form button {
+        width: 350px;
+    }
+}
+
+@media only screen and (min-width: 900px) {
+    .card {
+        width: 27vw;
+    }
+    .card img {
+        height: calc(25vw - 1px);
+    }
+
+    .layout {
+        flex-flow: row wrap;
+        justify-content: center;
+    }
+
+} 
+
+.hidden {
+    display: none;
+}
