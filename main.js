@@ -25,18 +25,13 @@ newOrder.orderItems = [];
 
 let newOrderItems = [];
 
-const getOptions = {method: 'GET',
-                    credentials: 'same-origin',
-                    headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin":"*"
-  }
-}; 
+let authorizationToken = "";
 
 
 async function fetchFunction(endpoint, options) {
     let request = new Request(endpoint, (options));
     let response = await fetch(request);
+    console.log(response);
     let data = await response.json();
     console.log(data);
     return data;
@@ -104,7 +99,9 @@ observer.observe(document.querySelector(".order-list"), {
 //     }
 // };
 
-
+// Update customer
+// Get all my orders
+// Filter order (size, price)
 
 function ordered(orderList) {
     let checkedItem;
@@ -201,11 +198,24 @@ loginButton.addEventListener("click", () => {
         // On login show product list
         if (res.token) {
             
+            const getOptions = {method: 'GET',
+                    
+                    
+                    headers: {
+                            
+                            "Authorization": `Bearer ${res.token}`, 
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin":"*"
+                        }
+                        }; 
+    
+            
+            
             container.classList.remove("hidden");
             loginForm.classList.add("hidden");
             
             newOrder.customerId = res.userId;
-            //Temporary solution
+            // Temporary solution - implement on backend to provide an employeeId
             newOrder.employeeId = 7;
 
                 //let employeeData = fetchFunction(`${homeUrl}employee/`, getOptions);
@@ -317,6 +327,8 @@ createOrder.addEventListener("click", () => {
         console.log(`Your order has been successfully processed. Final sum is ${orderItemsDisplay.querySelector(".total-sum").innerHTML.split(" ")[2]}`);
         newOrderItems = [];
         addOrderItems(newOrderItems);
+    }, reject => {
+        console.log("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!");
     });
 });
 
