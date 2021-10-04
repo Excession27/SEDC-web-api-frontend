@@ -143,6 +143,23 @@ h1 {
     border: 2px solid var(--eggshell);
 }
 
+.search {
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+}
+
+.search-input {
+    background-color: var(--may-green);
+    border: none;
+    width: 70vw;
+    height: 45px;
+    font-size: 1.3rem;
+    padding: 10px;
+    border-radius: 15px;
+    text-align: center;
+}
+
 .shopping-cart {
     background-color: var(--hunter-green);
     width: 100%;
@@ -153,12 +170,17 @@ h1 {
     top: -2px;
 }
 
-.shopping-cart-icon {
+.shopping-cart-icon, .profile-icon {
     min-width: 50px;
     width: 50px;
         /*height: 50px; */
     min-height: 50px;
     margin-right: 20px;
+}
+
+.profile-icon img {
+    width: 50px;
+    height: 50px;
 }
 
 .shopping-cart-icon img {
@@ -192,6 +214,10 @@ h1 {
     margin: 10px 10px;
 }
 
+.profile-modal {
+
+}
+
 .android-green-text {
     color: var(--android-green);
 }
@@ -204,6 +230,7 @@ h1 {
 @media only screen and (min-width: 600px) {
     .card {
         width: 40vw;
+        height: 500px;
     }
 
     .layout {
@@ -227,7 +254,7 @@ h1 {
 
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 840px) {
     .card {
         width: 250px;
         height: 580px;
@@ -237,6 +264,7 @@ h1 {
     }
 
     .layout {
+        padding: 0 10vw;
         flex-flow: row wrap;
         justify-content: center;
     }

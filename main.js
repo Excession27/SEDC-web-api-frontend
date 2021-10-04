@@ -18,6 +18,10 @@ const clearCart = document.querySelector(".clear-cart")
 const createOrder = document.querySelector(".create-order");
 
 const totalSum = document.querySelector(".total-sum");
+const searchBar = document.querySelector(".search-input");
+
+const profileIcon = document.querySelector(".profile-icon")
+const profileModal = document.querySelector(".profile-modal");
 
 let newOrder = new Object();
 newOrder.orderItems = [];
@@ -26,7 +30,8 @@ newOrder.orderItems = [];
 let newOrderItems = [];
 
 let authorizationToken = "";
-
+let arrayOfProducts = [];
+let jwtToken = "";
 
 async function fetchFunction(endpoint, options) {
     let request = new Request(endpoint, (options));
@@ -61,16 +66,61 @@ let homeUrl = "https://localhost:44394/api/";
 
 let observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
+        console.log(mutation);
         if (mutation.target.childElementCount == 0) {
             console.log("Cart is empty");
         }
+
     });
     
+});
+
+observer.observe(searchBar, {
+    characterData: true
 });
 
 observer.observe(document.querySelector(".order-list"), {
     childList: true
 });
+
+searchBar.addEventListener('input', function (evt) {
+    console.log(searchBar.value);
+    let searchedFor = [];
+    if (searchBar.value.length > 2) {
+        searchedFor = arrayOfProducts.filter((item) => {
+            
+            let term = searchBar.value.toLowerCase().split(" ");
+            
+            let boolean = false;
+
+            boolean = search(item, term[0]) > -1; //|| search(item, term[1]) > -1;
+            console.log("boolean");
+            console.log(boolean);
+            
+
+            return boolean;
+        });
+        if (searchedFor.length <= 0) {
+            console.log("Nothing found");
+            return
+        } else {
+            displayProducts(searchedFor);
+        }
+    } else {
+        displayProducts(arrayOfProducts);
+    }
+
+  });
+
+
+function search (item, string) {
+    return (item.productName.toLowerCase()
+            + " " + item.description.toLowerCase()
+            + " " + String(item.unitPrice).toLowerCase()
+            + " " + item.size.toLowerCase()).search(string)
+};
+
+
 
 // async function ordered(orderList) {
 //     let checkedItem;
@@ -102,6 +152,62 @@ observer.observe(document.querySelector(".order-list"), {
 // Update customer
 // Get all my orders
 // Filter order (size, price)
+function displayProducts(array) {
+    productSection.innerHTML = "<span></span>";
+    array.forEach(item => {
+                    
+        productSection.lastElementChild.insertAdjacentHTML("afterend",
+            `
+        <div class="card" id="product-id-${item.productId}">
+            <img src="${item.imagePath}" alt="">
+            <div class="card-text">
+                <h2>${item.productName}</h2>
+                <p class="product-description">${(item.description).substr(0, 160)}...</p>
+                <p class="product-size">Size: ${item.size}</p>
+                <p class="product-price">${item.unitPrice} din</p><span class="discounted"></span>
+            </div>
+            <div class="order-controls">
+                <input type="number" name="" id="" class="item-qty" step="1" min="0" value="1">
+                <button class="add-item">Add to cart</button>
+            </div>
+        </div>
+        `);
+    
+    });
+
+    setTimeout(() => {
+        const addItem = document.querySelectorAll(".add-item");
+    
+        addItem.forEach(addToCartButton => {
+            addToCartButton.addEventListener("click", (product) => {
+                //console.log(product);
+    
+                let productQty = product.target.previousElementSibling.value;
+                if (productQty > 0) {
+                    let productId = product.target.parentElement.parentElement.id.split ("-").pop();
+                
+                    clickedItem = array.find( product => product.productId == productId);                               
+                    
+                    let orderEntryDisplay = new Object();
+    
+                    orderEntryDisplay.name = clickedItem.productName;
+                    orderEntryDisplay.quantity = Number(productQty);
+                    orderEntryDisplay.price = clickedItem.unitPrice;
+                    orderEntryDisplay.totalSum = orderEntryDisplay.quantity * orderEntryDisplay.price;
+                    orderEntryDisplay.productId = clickedItem.productId;
+                    
+                    newOrderItems.push(orderEntryDisplay);
+    
+                    addOrderItems(newOrderItems);
+                }
+    
+            });
+        });
+    }, 50)
+
+
+}
+
 
 function ordered(orderList) {
     let checkedItem;
@@ -197,13 +303,13 @@ loginButton.addEventListener("click", () => {
     fetchFunction(`${homeUrl}User/`, loginOptions).then( res => {
         // On login show product list
         if (res.token) {
+            jwtToken = res.token;
             
             const getOptions = {method: 'GET',
                     
-                    
                     headers: {
-                            
-                            "Authorization": `Bearer ${res.token}`, 
+                            "WWW-Authenticate" : "Bearer",
+                            "Authorization": `Bearer ${jwtToken}`, 
                             "Content-Type": "application/json",
                             "Access-Control-Allow-Origin":"*"
                         }
@@ -221,60 +327,15 @@ loginButton.addEventListener("click", () => {
                 //let employeeData = fetchFunction(`${homeUrl}employee/`, getOptions);
                 //let customerData = fetchFunction(`${homeUrl}customer/`, getOptions);
             
-                let productData = fetchFunction(`${homeUrl}product/`, getOptions).then(arrayOfProducts => {
+                let productData = fetchFunction(`${homeUrl}product/`, getOptions).then(receivedProducts => {
+                    
+                    arrayOfProducts = receivedProducts;
+
                     //Display received products
-                    arrayOfProducts.forEach(item => {
-                        
-                        productSection.lastElementChild.insertAdjacentHTML("afterend",
-                            `
-                        <div class="card" id="product-id-${item.productId}">
-                            <img src="${item.imagePath}" alt="">
-                            <div class="card-text">
-                                <h2>${item.productName}</h2>
-                                <p class="product-description">${(item.description).substr(0, 160)}...</p>
-                                <p class="product-size">Size: ${item.size}</p>
-                                <p class="product-price">${item.unitPrice} din</p><span class="discounted"></span>
-                            </div>
-                            <div class="order-controls">
-                                <input type="number" name="" id="" class="item-qty" step="1" min="0" value="1">
-                                <button class="add-item">Add to cart</button>
-                            </div>
-                        </div>
-                        `);
 
-                        
-                    });
-                    return arrayOfProducts;
-                }).then(arrayOfProducts => {
-                    // Add event listener to each product
-                    const addItem = document.querySelectorAll(".add-item");
+                    displayProducts(receivedProducts);
 
-                    addItem.forEach(addToCartButton => {
-                        addToCartButton.addEventListener("click", (product) => {
-                            console.log(product);
-
-                            let productQty = product.target.previousElementSibling.value;
-                            if (productQty > 0) {
-                                let productId = product.target.parentElement.parentElement.id.split ("-").pop();
-                            
-                                clickedItem = arrayOfProducts.find( product => product.productId == productId);                               
-                                
-                                let orderEntryDisplay = new Object();
-    
-                                orderEntryDisplay.name = clickedItem.productName;
-                                orderEntryDisplay.quantity = Number(productQty);
-                                orderEntryDisplay.price = clickedItem.unitPrice;
-                                orderEntryDisplay.totalSum = orderEntryDisplay.quantity * orderEntryDisplay.price;
-                                orderEntryDisplay.productId = clickedItem.productId;
-                                
-                                newOrderItems.push(orderEntryDisplay);
-    
-                                addOrderItems(newOrderItems);
-                            }
-
-                        });
-                    });
-                });
+                })
                 // TODO: Impelement wrong login credentials message
         } else {
 
@@ -298,6 +359,30 @@ clearCart.addEventListener("click", () => {
     finalSum = 0;
     orderItemsDisplay.querySelector(".total-sum").innerHTML = `Final sum: ${finalSum}`
     orderItemsDisplay.querySelector(".order-list").innerHTML = "";
+});
+
+// Show profile modal
+profileIcon.addEventListener("click", () => {
+    profileModal.classList.toggle("hidden");
+
+    const getOptions = {method: 'GET',
+                    
+    headers: {
+            "WWW-Authenticate" : "Bearer",
+            "Authorization": `Bearer ${jwtToken}`, 
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin":"*"
+        }
+        }; 
+
+    // Fetch order data for user
+    fetchFunction(`${homeUrl}Order/orders/${newOrder.customerId}`, getOptions).then( res => {
+        
+        //console.log(res);
+            
+
+    
+    });
 });
 
 // Create the order
@@ -328,7 +413,7 @@ createOrder.addEventListener("click", () => {
         newOrderItems = [];
         addOrderItems(newOrderItems);
     }, reject => {
-        console.log("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!");
+        console.log("Your order was not processed. Something went wrong with the order.");
     });
 });
 
