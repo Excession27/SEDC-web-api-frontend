@@ -1,7 +1,7 @@
 :root {
     /* CSS HSL */
-    --hunter-green: hsla(132, 29%, 31%, 1);
-    --may-green: hsla(98, 32%, 45%, 1);
+    --hunter-green: hsl(132, 29%, 31%);
+    --may-green: hsl(98, 32%, 45%);
     --android-green: hsla(78, 51%, 56%, 1);
     --eggshell: hsl(43, 57%, 88%);
     --deep-chestnut: hsla(359, 47%, 51%, 1);
@@ -30,7 +30,7 @@ h1 {
 }
 
 .container {
-    width: 100vw;
+    width: 100%;
 }
 
 
@@ -215,7 +215,42 @@ h1 {
 }
 
 .profile-modal {
+    display: flex;
+    position: absolute !important;
+    top: 0px;
+    left: 15vw;
+    padding: 40px 20px 30px;
+    width: 70vw;
+    height: auto;
+    border-radius: 27px;
+    background: #386641;
+    box-shadow:  -30px -30px 55px #1d3421,
+                 30px 30px 55px #539861;
 
+    overflow: auto;
+    
+}
+
+.profile-modal .close{
+    position: relative;
+    left: 65vw;
+    bottom: 25px;
+    width: 25px;
+    height: 25px;
+    color: var(--eggshell);
+    background-color: var(--deep-chestnut);
+    border-radius: 5px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.order-row {
+    padding: 20px;
+    display: flex;
+}
+
+.order-row p {
+    margin: 10px;
 }
 
 .android-green-text {

@@ -20,8 +20,10 @@ const createOrder = document.querySelector(".create-order");
 const totalSum = document.querySelector(".total-sum");
 const searchBar = document.querySelector(".search-input");
 
-const profileIcon = document.querySelector(".profile-icon")
+const profileIcon = document.querySelector(".profile-icon");
 const profileModal = document.querySelector(".profile-modal");
+const profileOrders = document.querySelector(".profile-orders");
+const closeModal = document.querySelector(".profile-modal .close");
 
 let newOrder = new Object();
 newOrder.orderItems = [];
@@ -45,24 +47,6 @@ async function fetchFunction(endpoint, options) {
 let homeUrl = "https://localhost:44394/api/";
 
 
-// btnEmployee.addEventListener("click", () => {
-//     let finalUrl = homeUrl + "employee/";
-
-//     fetchFunction(finalUrl, getOptions);
-// });
-
-// btnCustomer.addEventListener("click", () => {
-//     let finalUrl = homeUrl + "customer/";
-
-//     fetchFunction(finalUrl, getOptions);
-// });
-
-// btnProduct.addEventListener("click", () => {
-//     let finalUrl = homeUrl + "product/";
-
-//     fetchFunction(finalUrl, getOptions);
-// });
-
 
 let observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
@@ -70,7 +54,6 @@ let observer = new MutationObserver(mutations => {
         if (mutation.target.childElementCount == 0) {
             console.log("Cart is empty");
         }
-
     });
     
 });
@@ -104,10 +87,10 @@ searchBar.addEventListener('input', function (evt) {
             console.log("Nothing found");
             return
         } else {
-            displayProducts(searchedFor);
+            displayProducts(searchedFor, productSection);
         }
     } else {
-        displayProducts(arrayOfProducts);
+        displayProducts(arrayOfProducts, productSection);
     }
 
   });
@@ -152,17 +135,17 @@ function search (item, string) {
 // Update customer
 // Get all my orders
 // Filter order (size, price)
-function displayProducts(array) {
-    productSection.innerHTML = "<span></span>";
+function displayProducts(array, place) {
+    place.innerHTML = "<span></span>";
     array.forEach(item => {
                     
-        productSection.lastElementChild.insertAdjacentHTML("afterend",
+        place.lastElementChild.insertAdjacentHTML("afterend",
             `
         <div class="card" id="product-id-${item.productId}">
             <img src="${item.imagePath}" alt="">
             <div class="card-text">
                 <h2>${item.productName}</h2>
-                <p class="product-description">${(item.description).substr(0, 160)}...</p>
+                <p class="product-description">${(item.description).substr(0, 130)}...</p>
                 <p class="product-size">Size: ${item.size}</p>
                 <p class="product-price">${item.unitPrice} din</p><span class="discounted"></span>
             </div>
@@ -308,7 +291,7 @@ loginButton.addEventListener("click", () => {
             const getOptions = {method: 'GET',
                     
                     headers: {
-                            "WWW-Authenticate" : "Bearer",
+                            "accept": "*/*",
                             "Authorization": `Bearer ${jwtToken}`, 
                             "Content-Type": "application/json",
                             "Access-Control-Allow-Origin":"*"
@@ -333,7 +316,7 @@ loginButton.addEventListener("click", () => {
 
                     //Display received products
 
-                    displayProducts(receivedProducts);
+                    displayProducts(receivedProducts, productSection);
 
                 })
                 // TODO: Impelement wrong login credentials message
@@ -361,9 +344,38 @@ clearCart.addEventListener("click", () => {
     orderItemsDisplay.querySelector(".order-list").innerHTML = "";
 });
 
+/*
+function displayPreviousOrders(array, place) {
+    //place.innerHTML = `<p class="close">X</p>`;
+
+    array.forEach(item => {
+                    
+        place.lastElementChild.insertAdjacentHTML("afterend",
+            `
+        <div class="order-row" id="order-id-${item.orderId}">
+            
+                <p>${item.orderNumber}</p>
+                <p class="">Order ID: ${item.orderId}</p>
+                <p class="">Order date: ${item.orderDate}</p>
+                <p class="total-amount">Total amount: ${item.totalAmount}</p>
+            
+        </div>
+        `);
+    
+    });
+
+}
+
+*/
+let notLoadedProfileOrders = true;
+
 // Show profile modal
 profileIcon.addEventListener("click", () => {
     profileModal.classList.toggle("hidden");
+    const allInputs = document.querySelectorAll(".order-controls input");
+    allInputs.forEach(item => {
+        item.classList.toggle("hidden");
+    });
 
     const getOptions = {method: 'GET',
                     
@@ -374,16 +386,36 @@ profileIcon.addEventListener("click", () => {
             "Access-Control-Allow-Origin":"*"
         }
         }; 
-
-    // Fetch order data for user
-    fetchFunction(`${homeUrl}Order/orders/${newOrder.customerId}`, getOptions).then( res => {
-        
-        //console.log(res);
-            
-
     
+    // Fetch order data for logged in user
+    if (notLoadedProfileOrders) {
+        fetchFunction(`${homeUrl}Order/orders`, getOptions).then( res => {
+        
+            displayPreviousOrders(res, profileOrders);
+            notLoadedProfileOrders = false;
+    
+
+        });
+    }
+
+});
+
+
+
+
+// Hide modal
+closeModal.addEventListener("click", () => {
+    const allInputs = document.querySelectorAll(".order-controls input");
+    profileModal.classList.toggle("hidden");
+    allInputs.forEach(item => {
+        item.classList.toggle("hidden");
     });
 });
+
+if (profileModal.classList.contains("hidden")) {
+
+}
+
 
 // Create the order
 createOrder.addEventListener("click", () => {
@@ -401,8 +433,10 @@ createOrder.addEventListener("click", () => {
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
-          'Content-Type': 'application/json',
-          "Access-Control-Allow-Origin":"*"
+            "accept": "*/*",
+            "Authorization": `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin":"*"
         },
         body: JSON.stringify(newOrder)
       };
