@@ -48,23 +48,8 @@ let homeUrl = "https://localhost:44394/api/";
 
 
 
-let observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-        console.log(mutation);
-        if (mutation.target.childElementCount == 0) {
-            console.log("Cart is empty");
-        }
-    });
-    
-});
 
-observer.observe(searchBar, {
-    characterData: true
-});
-
-observer.observe(document.querySelector(".order-list"), {
-    childList: true
-});
+// Search bar
 
 searchBar.addEventListener('input', function (evt) {
     console.log(searchBar.value);
@@ -105,32 +90,6 @@ function search (item, string) {
 
 
 
-// async function ordered(orderList) {
-//     let checkedItem;
-//     let sortedList = [];
-//     console.log(orderList);
-//     if (orderList.length > 1) {
-//     orderList.forEach((item, index) => {
-//         checkedItem = orderList[index];
-//         if (checkedItem) {
-//             console.log("entered second forEach");
-//             orderList.forEach((item, index) => {
-//                 if( checkedItem.productId == item.productId) {
-//                     checkedItem.quantity += item.quantity;
-                    
-//                 }
-//             });
-//             console.log(checkedItem);
-//             sortedList.push(checkedItem);
-//         }
-//     });
-
-//     return sortedList;
-// }
-//     else {
-//         return orderList;
-//     }
-// };
 
 // Update customer
 // Get all my orders
@@ -306,9 +265,6 @@ loginButton.addEventListener("click", () => {
             newOrder.customerId = res.userId;
             // Temporary solution - implement on backend to provide an employeeId
             newOrder.employeeId = 7;
-
-                //let employeeData = fetchFunction(`${homeUrl}employee/`, getOptions);
-                //let customerData = fetchFunction(`${homeUrl}customer/`, getOptions);
             
                 let productData = fetchFunction(`${homeUrl}product/`, getOptions).then(receivedProducts => {
                     
@@ -344,29 +300,7 @@ clearCart.addEventListener("click", () => {
     orderItemsDisplay.querySelector(".order-list").innerHTML = "";
 });
 
-/*
-function displayPreviousOrders(array, place) {
-    //place.innerHTML = `<p class="close">X</p>`;
 
-    array.forEach(item => {
-                    
-        place.lastElementChild.insertAdjacentHTML("afterend",
-            `
-        <div class="order-row" id="order-id-${item.orderId}">
-            
-                <p>${item.orderNumber}</p>
-                <p class="">Order ID: ${item.orderId}</p>
-                <p class="">Order date: ${item.orderDate}</p>
-                <p class="total-amount">Total amount: ${item.totalAmount}</p>
-            
-        </div>
-        `);
-    
-    });
-
-}
-
-*/
 let notLoadedProfileOrders = true;
 
 // Show profile modal
